@@ -2,7 +2,7 @@
 
 > A personal health tracking application for managing medical records, appointments, daily routines, symptoms, and weather-based health correlations — all in one place.
 
-Built with **React Router v7** (web), **Expo/React Native** (mobile), **Hono** (server), and **PostgreSQL via Neon** (database). Developed entirely using **Claude Opus** with zero prior coding experience.
+Built with **React Router v7** (web), **Expo/React Native** (mobile), **Hono** (server), and **PostgreSQL via Neon** (database).
 
 ---
 
