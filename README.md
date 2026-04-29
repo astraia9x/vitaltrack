@@ -1,48 +1,50 @@
-# 🩺 VitalTrack
+# VitalTrack
 
-A personal health tracking app that helps you monitor medical records, daily routines, doctor appointments, symptoms, and weather correlations — all in one place. Built with React Router v7 (web) and Expo (mobile).
+> A personal health tracking application for managing medical records, appointments, daily routines, symptoms, and weather-based health correlations — all in one place.
+
+Built with **React Router v7** (web), **Expo/React Native** (mobile), **Hono** (server), and **PostgreSQL via Neon** (database). Developed entirely using **Claude Opus** with zero prior coding experience.
 
 ---
 
-## ✨ Features
+## Features
 
-- **Dashboard** — At-a-glance summary: routine completion, symptom severity trend, records count, next appointment, and live weather
+- **Dashboard** — At-a-glance summary of routine completion, symptom severity trends, health record count, next appointment, and live weather
 - **Health Records** — Store and browse medical history, lab results, prescriptions, and visit summaries
-- **Routines** — Manage daily health habits and medications; toggle active/inactive
+- **Routines** — Manage daily health habits and medications with active/inactive toggling
 - **Appointments** — Track upcoming and past doctor visits with specialty and reason details
-- **Symptom Log** — Log symptoms with severity (1–10); auto-captures local weather at time of logging
-- **Live Weather Widget** — Real-time weather for any city (°C, km/h, UV, humidity, feels-like)
+- **Symptom Log** — Log symptoms with severity (1-10); automatically captures local weather at time of logging
+- **Live Weather Widget** — Real-time weather for any city (temperature, wind speed, UV index, humidity, feels-like)
 - **Forecast-Based Alerts** — Warns when today's weather matches patterns that previously triggered high-severity symptoms
 
 ---
 
-## 🖥️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | React + [React Router v7](https://reactrouter.com) |
+| Web Frontend | React + React Router v7 |
 | Mobile | Expo / React Native (Expo Router) |
-| Backend | React Router v7 API routes + [Hono](https://hono.dev) server |
-| Database | PostgreSQL via [Neon](https://neon.tech) serverless |
-| Data fetching | [TanStack React Query](https://tanstack.com/query) |
-| Weather API | WeatherAPI (via integration proxy) |
+| Backend | React Router v7 API routes + Hono |
+| Database | PostgreSQL via Neon (serverless) |
+| Data Fetching | TanStack React Query |
+| Weather API | WeatherAPI |
 | Styling | Tailwind CSS |
 | Icons | Lucide React |
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 apps/
 ├── web/
 │   └── src/
 │       ├── app/
-│       │   ├── page.jsx                  # Dashboard
-│       │   ├── appointments/page.jsx     # Appointments tracker
-│       │   ├── records/page.jsx          # Health records
-│       │   ├── routines/page.jsx         # Routine manager
-│       │   ├── symptoms/page.jsx         # Symptom log
+│       │   ├── page.jsx                    # Dashboard
+│       │   ├── appointments/page.jsx       # Appointments tracker
+│       │   ├── records/page.jsx            # Health records
+│       │   ├── routines/page.jsx           # Routine manager
+│       │   ├── symptoms/page.jsx           # Symptom log
 │       │   └── api/
 │       │       ├── appointments/route.js
 │       │       ├── records/route.js
@@ -51,22 +53,21 @@ apps/
 │       │       ├── symptoms/route.js
 │       │       ├── weather/route.js
 │       │       └── utils/
-│       │           ├── sql.js            # Neon DB helper
-│       │           └── upload.js         # File upload helper
+│       │           ├── sql.js              # Neon DB helper
+│       │           └── upload.js           # File upload helper
 └── mobile/
     └── src/
         └── app/
-            ├── _layout.jsx               # Root Expo layout
-            └── index.jsx                 # Mobile entry point
+            ├── _layout.jsx                 # Root Expo layout
+            └── index.jsx                   # Mobile entry point
 ```
 
 ---
 
-## 🗄️ Database Schema
-
-Four core PostgreSQL tables:
+## Database Schema
 
 ### `appointments`
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
@@ -78,6 +79,7 @@ Four core PostgreSQL tables:
 | `created_at` | timestamptz | Auto |
 
 ### `health_records`
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
@@ -88,6 +90,7 @@ Four core PostgreSQL tables:
 | `created_at` | timestamptz | Auto |
 
 ### `routines`
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
@@ -98,18 +101,19 @@ Four core PostgreSQL tables:
 | `created_at` | timestamptz | Auto |
 
 ### `symptoms`
+
 | Column | Type | Notes |
 |---|---|---|
 | `id` | integer | Primary key |
 | `description` | text | Required |
-| `severity` | integer | 1–10 |
+| `severity` | integer | 1-10 |
 | `logged_at` | timestamptz | Auto |
-| `weather_temp` | numeric | °C at time of log |
+| `weather_temp` | numeric | Celsius at time of log |
 | `weather_condition` | text | e.g. Partly Cloudy |
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -122,42 +126,19 @@ Four core PostgreSQL tables:
 | `PATCH` | `/api/routines/:id` | Update a routine (e.g. toggle active) |
 | `DELETE` | `/api/routines/:id` | Delete a routine |
 | `GET` | `/api/symptoms` | List all symptom logs |
-| `POST` | `/api/symptoms` | Log a symptom (auto-fetches weather) |
+| `POST` | `/api/symptoms` | Log a symptom with auto-fetched weather |
 | `GET` | `/api/weather?city=...` | Get current weather for a city |
 
 ---
 
-## ⚙️ Environment Variables
-
-Copy `.env.example` to `.env.local` and fill in your values:
-
-**`apps/web/.env.local`**
-```env
-DATABASE_URL=postgresql://user:password@host/dbname
-NEXT_PUBLIC_CREATE_APP_URL=https://your-app-url.com
-```
-
-**`apps/mobile/.env.local`**
-```env
-EXPO_PUBLIC_APP_URL=https://your-app-url.com
-EXPO_PUBLIC_BASE_URL=https://your-app-url.com
-EXPO_PUBLIC_CREATE_ENV=PRODUCTION
-EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
-EXPO_PUBLIC_PROJECT_GROUP_ID=your-project-group-id
-EXPO_PUBLIC_UPLOADCARE_PUBLIC_KEY=your-uploadcare-public-key
-```
-
-> ⚠️ Never commit `.env` or `.env.local` files. They are already in `.gitignore`.
-
----
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- A [Neon](https://neon.tech) (or any PostgreSQL) database
 
-### Web app
+- Node.js 18+
+- A [Neon](https://neon.tech) or any PostgreSQL database
+
+### Web App
 
 ```bash
 cd apps/web
@@ -165,9 +146,9 @@ npm install
 npm run dev
 ```
 
-The app will be available at `http://localhost:5173` (or check your terminal output).
+Available at `http://localhost:5173`
 
-### Mobile app
+### Mobile App
 
 ```bash
 cd apps/mobile
@@ -175,9 +156,9 @@ npm install
 npx expo start
 ```
 
-### Set up the database
+### Database Setup
 
-Run the following SQL to create the required tables:
+Run the following SQL to initialize the required tables:
 
 ```sql
 CREATE TABLE appointments (
@@ -220,6 +201,32 @@ CREATE TABLE symptoms (
 
 ---
 
-## 📄 License
+## Environment Variables
 
-MIT — feel free to use and adapt this for your own health tracking needs.
+Copy `.env.example` to `.env.local` and fill in your values.
+
+**`apps/web/.env.local`**
+
+```env
+DATABASE_URL=postgresql://user:password@host/dbname
+NEXT_PUBLIC_CREATE_APP_URL=https://your-app-url.com
+```
+
+**`apps/mobile/.env.local`**
+
+```env
+EXPO_PUBLIC_APP_URL=https://your-app-url.com
+EXPO_PUBLIC_BASE_URL=https://your-app-url.com
+EXPO_PUBLIC_CREATE_ENV=PRODUCTION
+EXPO_PUBLIC_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+EXPO_PUBLIC_PROJECT_GROUP_ID=your-project-group-id
+EXPO_PUBLIC_UPLOADCARE_PUBLIC_KEY=your-uploadcare-public-key
+```
+
+> Never commit `.env` or `.env.local` files. They are already included in `.gitignore`.
+
+---
+
+## License
+
+MIT — free to use and adapt for your own health tracking needs.
